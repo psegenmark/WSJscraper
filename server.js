@@ -123,6 +123,73 @@ app.post("/articles/:id", function(req, res) {
     });
 });
 
+// app.post("/articles/:id", function(req, res) {
+//   // Create a new note and pass the req.body to the entry
+//     db.articles.update({"_id": req.params.id }, {$set: { issaved: true }});
+//     })
+
+    app.post("/articles/:id", function(req, res) {
+      // When searching by an id, the id needs to be passed in
+      // as (mongojs.ObjectId(IDYOUWANTTOFIND))
+    
+      // Update the note that matches the object id
+      db.articles.update(
+        {
+          _id: mongojs.ObjectId(req.params.id)
+        },
+        {
+          // Set the title, note and modified parameters
+          // sent in the req's body.
+          $set: {
+            issaved: true,
+          }
+        },
+        function(error, edited) {
+          // Log any errors from mongojs
+          if (error) {
+            console.log(error);
+            res.send(error);
+          }
+          else {
+            // Otherwise, send the mongojs response to the browser
+            // This will fire off the success function of the ajax request
+            console.log(edited);
+            res.send(edited);
+          }
+        }
+      );
+    });
+
+// Route for updating an Article being saved
+// app.post("/articles/:id", function(req, res) {
+//   // Create a new note and pass the req.body to the entry
+//       db.Article.update({ _id: req.params.id },{$set: { issaved: true }});
+//     })
+// Route for updating an Article being saved
+// app.post("/articles/:id", function(req, res) {
+//   // 
+//   db.Article.update(
+//     {
+//       _id: mongojs.ObjectId(req.params.id)
+//     },
+//     {
+//       $set: {
+//         issaved: true
+//       }
+//     },
+//     function(error, edited) {
+//       res.send(edited);
+//     }
+//     // .create(req.body)
+//     // .then(function(dbArticle) {
+//     //   // If a Note was created successfully, find one Article with an `_id` equal to `req.params.id`. Update the Article to be associated with the new Note
+//     //   // { new: true } tells the query that we want it to return the updated User -- it returns the original by default
+//     //   // Since our mongoose query returns a promise, we can chain another `.then` which receives the result of the query
+//     //   return db.Article.findOneAndUpdate({ _id: req.params.id }, { issaved: true });
+//     // })
+// );
+// });
+
 // Start the server
 app.listen(PORT, function() {
   console.log("App running on port " + PORT + "!");

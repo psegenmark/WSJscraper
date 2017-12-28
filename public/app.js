@@ -12,56 +12,61 @@ $.getJSON("/articles", function(data) {
   // For each one
   for (var i = 0; i < data.length; i++) {
     // Display the apropos information on the page
-    $("#articles").append("<p data-id='" + data[i]._id + "'>" + data[i].title + "<br />" + data[i].link + "</p>" + "<button id=saveButton type=button>Save Article</button>" + "<button id=deleteButton type=button>Delete Article</button>");
+    $("#articles").append("<p data-id='" + data[i]._id + "'>" + data[i].title + "<br />" + data[i].link + "</p>" + "<button data-id='" + data[i]._id + "'class=saveButton type=button>Save Article</button>");
   }
 });
 });
 alert("You have scraped WSJ!");
 });
 
-// Whenever someone clicks a p tag
-$(document).on("click", "p", function() {
-  // Empty the notes from the note section
-  $("#notes").empty();
-  // Save the id from the p tag
-  var thisId = $(this).attr("data-id");
+
+
+$(document).on("click", ".saveButton", function(){
+  var idSave = $(this).attr("data-id");
+  console.log(idSave);
   
-  // Now make an ajax call for the Article
+  $.ajax({
+    method: "POST",
+    url: "/articles/" + idSave,
+    dataType: "json",
+    data: {
+      $set: {
+      issaved: true
+    }
+    },
+    // On successful call
+    success: function(data) {
+      console.log(data.note);
+  }
+  });
+  });
+
+  // when an article is saved, it adds the note ID to the article. So if we find by noteID we should find all saved!
+
+
+$(document).on("click", "#savedArticles", function(){
+  // window.location.href="/savedArticles.html"
+
   $.ajax({
     method: "GET",
-    url: "/articles/" + thisId
+    url: "/articles/"
   })
     // With that done, add the note information to the page
     .done(function(data) {
       console.log(data);
-      // The title of the article
-      $("#notes").append("<h2>" + data.title + "</h2>");
-      // An input to enter a new title
-      $("#notes").append("<input id='titleinput' name='title' >");
-      // A textarea to add a new note body
-      $("#notes").append("<textarea id='bodyinput' name='body'></textarea>");
-      // A button to submit a new note, with the id of the article saved to it
-      $("#notes").append("<button data-id='" + data._id + "' id='savenote'>Save Note</button>");
-      // A button to delete a new note, with the id of the article saved to it
-      $("#notes").append("<button data-id='" + data._id + "' id='deletenote'>Delete Note</button>");
-
-      // If there's a note in the article
-      if (data.note) {
-        // Place the title of the note in the title input
-        $("#titleinput").val(data.note.title);
-        // Place the body of the note in the body textarea
-        $("#bodyinput").val(data.note.body);
-      }
-    });
+    
+$.getJSON("/articles", function(data) {
+  // For each one
+  for (var i = 0; i < data.length; i++) {
+    // Display the apropos information on the page
+    if(data[i].note) {
+    $("#articlesSaved").append("<p data-id='" + data[i]._id + "'>" + data[i].title + "<br />" + data[i].link + "</p>" +  "<button data-id='" + data[i]._id + "'id=deleteButton type=button>Delete Article</button>");
+  }
+};
+});
+});
 });
 
-$(document).on("click", "#saveButton", function(){
-  console.log("figure out how to save this article")
-});
-
-$(document).on("click", "#savedArticles", function(){
-  window.location.href="/savedArticles.html"
-});
 
 $(document).on("click", "#homeButton", function(){
   window.location.href="/index.html"
@@ -95,6 +100,39 @@ $(document).on("click", "#savenote", function() {
   // Also, remove the values entered in the input and textarea for note entry
   $("#titleinput").val("");
   $("#bodyinput").val("");
-});
+  });
+  
+  // Whenever someone clicks a p tag
+$(document).on("click", "p", function() {
+  // Empty the notes from the note section
+  $("#notes").empty();
+  // Save the id from the p tag
+  var thisId = $(this).attr("data-id");
+  
+  // Now make an ajax call for the Article
+  $.ajax({
+    method: "GET",
+    url: "/articles/" + thisId
+  })
+    // With that done, add the note information to the page
+    .done(function(data) {
+      // The title of the article
+      $("#notes").append("<h2>" + data.title + "</h2>");
+      // An input to enter a new title
+      $("#notes").append("<input id='titleinput' name='title' >");
+      // A textarea to add a new note body
+      $("#notes").append("<textarea id='bodyinput' name='body'></textarea>");
+      // A button to submit a new note, with the id of the article saved to it
+      $("#notes").append("<button data-id='" + data._id + "' id='savenote'>Save Note</button>");
+      // A button to delete a new note, with the id of the article saved to it
+      $("#notes").append("<button data-id='" + data._id + "' id='deletenote'>Delete Note</button>");
 
-
+      // If there's a note in the article
+      if (data.note) {
+        // Place the title of the note in the title input
+        $("#titleinput").val(data.note.title);
+        // Place the body of the note in the body textarea
+        $("#bodyinput").val(data.note.body);
+      }
+    });
+  });

@@ -17,6 +17,14 @@
         width: 70%;
         height: 700px;
       }
+      
+      #articlesSaved {
+        display: inline-block;
+        overflow: auto;
+        width: 70%;
+        height: 700px;
+      }
+
       #notes {
         float: right;
         width: 30%;
@@ -43,9 +51,11 @@
 
       <h2>Scroll and click the article you wish to comment on</h2>
       <button id="homeButton">Go Back To Scraper</button>
-
+      <button id="savedArticles">Saved Articles</button>
+      <br>
       <div id="articlesSaved"></div>
       <div id="notes"></div>
+
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="app.js"></script>
