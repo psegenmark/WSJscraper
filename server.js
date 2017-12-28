@@ -124,10 +124,31 @@ app.post("/articles/:id", function(req, res) {
     });
 });
 
-
+// delete article
 app.get("/delete/:id", function(req, res) {
   
       db.Article.
+      remove({_id: mongojs.ObjectId(req.params.id)
+      },
+      function(error, removed) {
+        if (error) {
+          console.log(error);
+          res.send(error);
+        }
+        else {
+          // Otherwise, send the mongojs response to the browser
+          // This will fire off the success function of the ajax request
+          console.log(removed);
+          res.send(removed);
+        }
+      }
+    );
+  });
+
+  // delete note
+app.get("/delete/:id", function(req, res) {
+  
+      db.Note.
       remove({_id: mongojs.ObjectId(req.params.id)
       },
       function(error, removed) {

@@ -41,7 +41,7 @@ $(document).on("click", ".saveButton", function(){
   });
   });
 
-// Delete Button 
+// Delete Article
 $(document).on("click", ".deleteButton", function() {
   var idDelete = $(this).attr("data-id");
   console.log(idDelete);
@@ -52,6 +52,21 @@ $(document).on("click", ".deleteButton", function() {
     dataType: "json",
     success: function (data) {
     console.log(data.note)
+}
+});
+});
+
+// Delete Note
+$(document).on("click", "#deletenote", function() {
+  var idDelete = $(this).attr("data-id");
+  console.log(idDelete);
+  
+  $.ajax({
+    method: "GET",
+    url: "/delete/" + idDelete,
+    dataType: "json",
+    success: function (data) {
+    console.log(data)
 }
 });
 });
