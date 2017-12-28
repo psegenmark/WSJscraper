@@ -20,7 +20,7 @@ alert("You have scraped WSJ!");
 });
 
 
-
+// save button
 $(document).on("click", ".saveButton", function(){
   var idSave = $(this).attr("data-id");
   console.log(idSave);
@@ -41,6 +41,21 @@ $(document).on("click", ".saveButton", function(){
   });
   });
 
+// Delete Button 
+$(document).on("click", ".deleteButton", function() {
+  var idDelete = $(this).attr("data-id");
+  console.log(idDelete);
+  
+  $.ajax({
+    method: "GET",
+    url: "/delete/" + idDelete,
+    dataType: "json",
+    success: function (data) {
+    console.log(data.note)
+}
+});
+});
+
   // when an article is saved, it adds the note ID to the article. So if we find by noteID we should find all saved!
 
 
@@ -60,7 +75,7 @@ $.getJSON("/articles", function(data) {
   for (var i = 0; i < data.length; i++) {
     // Display the apropos information on the page
     if(data[i].note) {
-    $("#articlesSaved").append("<p data-id='" + data[i]._id + "'>" + data[i].title + "<br />" + data[i].link + "</p>" +  "<button data-id='" + data[i]._id + "'id=deleteButton type=button>Delete Article</button>");
+    $("#articlesSaved").append("<p data-id='" + data[i]._id + "'>" + data[i].title + "<br />" + data[i].link + "</p>" +  "<button data-id='" + data[i]._id + "'class=deleteButton type=button>Delete Article</button>");
   }
 };
 });
@@ -101,7 +116,7 @@ $(document).on("click", "#savenote", function() {
   $("#titleinput").val("");
   $("#bodyinput").val("");
   });
-  
+
   // Whenever someone clicks a p tag
 $(document).on("click", "p", function() {
   // Empty the notes from the note section

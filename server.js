@@ -1,5 +1,6 @@
 var express = require("express");
 var bodyParser = require("body-parser");
+var mongojs = require("mongojs");
 var logger = require("morgan");
 var mongoose = require("mongoose");
 
@@ -123,10 +124,26 @@ app.post("/articles/:id", function(req, res) {
     });
 });
 
-// app.post("/articles/:id", function(req, res) {
-//   // Create a new note and pass the req.body to the entry
-//     db.articles.update({"_id": req.params.id }, {$set: { issaved: true }});
-//     })
+
+app.get("/delete/:id", function(req, res) {
+  
+      db.Article.
+      remove({_id: mongojs.ObjectId(req.params.id)
+      },
+      function(error, removed) {
+        if (error) {
+          console.log(error);
+          res.send(error);
+        }
+        else {
+          // Otherwise, send the mongojs response to the browser
+          // This will fire off the success function of the ajax request
+          console.log(removed);
+          res.send(removed);
+        }
+      }
+    );
+  });
 
     app.post("/articles/:id", function(req, res) {
       // When searching by an id, the id needs to be passed in
