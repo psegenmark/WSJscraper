@@ -29,11 +29,18 @@ app.use(express.static("public"));
 
 // Set mongoose to leverage built in JavaScript ES6 Promises
 // Connect to the Mongo DB
+var databaseUrl = "mongodb://localhost/wsjscrape";
+
+if (process.env.MONGODB_URI) {
+
+  mongoose.connect(process.env.MONGODB_URI); 
+} else {
+  mongoose.connect(databaseUrl);
+}
+
 mongoose.Promise = Promise;
-var MONGODB_URI = process.env.MONGODB_URI
-mongoose.connect(MONGODB_URI, {
-  useMongoClient: true
-});
+
+useMongoClient: true;
 
 // Routes
 
